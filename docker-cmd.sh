@@ -1,13 +1,15 @@
 #!/bin/bash
 
-NODES="${NODES:-localhost:127.0.0.1:}"
+NODES="${NODES:-}"
 SNMP_NODES="${SNMP_NODES:-}"
 
 # Fix ownership
-chown munin.munin /var/log/munin /run/munin /var/lib/munin /var/lib/munin/{cgi-tmp,spool}
+chown munin.munin \
+  /var/log/munin /run/munin /var/lib/munin \
+  /etc/munin/munin-conf.d /etc/munin/plugin-conf.d
 
 # Prepare for rrdcached
-sudo -u munin -- mkdir /var/lib/munin/rrdcached-journal
+sudo -u munin -- mkdir -p /var/lib/munin/rrdcached-journal
 
 # Start rrdcached
 sudo -u munin -- /usr/sbin/rrdcached \
@@ -21,7 +23,7 @@ sudo -u munin -- /usr/sbin/rrdcached \
 munin-node-configure --shell --suggest 2>/dev/null | bash
 
 # generate node list
-for NODE in "$NODES"
+[[ ! -z "$NODES" ]] && for NODE in "$NODES"
 do
   NAME=`echo "$NODE" | cut -d ":" -f1`
   HOST=`echo "$NODE" | cut -d ":" -f2`
@@ -29,7 +31,7 @@ do
   if [ ${#PORT} -eq 0 ]; then
       PORT=4949
   fi
-  if ! grep -q $HOST /etc/munin/munin-conf.d/nodes.conf 2>/dev/null ; then
+  if ! grep -q "$HOST" /etc/munin/munin-conf.d/nodes.conf 2>/dev/null ; then
     cat << EOF >> /etc/munin/munin-conf.d/nodes.conf
 [$NAME]
     address $HOST
@@ -41,7 +43,7 @@ EOF
 done
 
 # generate smtp node list, and query smtp hosts for config
-for NODE in $SNMP_NODES
+[[ ! -z "$SNMP_NODES" ]] && for NODE in "$SNMP_NODES"
 do
   HOST=`echo "$NODE" | cut -d ":" -f1`
   COMMUNITY=`echo "$NODE" | cut -d ":" -f2`
@@ -69,12 +71,14 @@ munin-node
 sudo -u munin -- /usr/bin/munin-cron munin
 
 # Spawn fast cgi process for generating graphs on the fly
-spawn-fcgi -s /var/run/munin/fastcgi-graph.sock -U nginx -u munin -g munin -- /usr/share/webapps/munin/cgi/munin-cgi-graph
+spawn-fcgi -s /var/run/munin/fastcgi-graph.sock -U nginx -u munin -g munin -- \
+  /usr/share/webapps/munin/cgi/munin-cgi-graph
 
 # Spawn fast cgi process for generating html on the fly
-spawn-fcgi -s /var/run/munin/fastcgi-html.sock -U nginx -u munin -g munin -- /usr/share/webapps/munin/cgi/munin-cgi-html
+spawn-fcgi -s /var/run/munin/fastcgi-html.sock -U nginx -u munin -g munin -- \
+  /usr/share/webapps/munin/cgi/munin-cgi-html
 
-# Munin runs in cron, start cron
+# Munin and logrotate runs in cron, start cron
 crond
 
 # Start web-server

@@ -1,0 +1,8 @@
+/var/log/munin/*.log {
+    rotate 7
+    daily
+    compress
+    delaycompress
+    missingok
+    notifempty
+}

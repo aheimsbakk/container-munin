@@ -5,7 +5,7 @@ MAINTAINER Arnulf Heimsbakk <arnulf.heimsbakk@gmail.com>
 
 # Install packages
 RUN apk update; \
-    apk add dumb-init sudo munin rrdtool-cached \
+    apk add dumb-init sudo logrotate munin rrdtool-cached \
             nginx spawn-fcgi perl-cgi-fast; \
     rm /var/cache/apk/*
 
@@ -29,6 +29,9 @@ COPY munin.conf /etc/munin/
 
 # Start script with all processes
 COPY docker-cmd.sh /
+
+# Logrotate script for munin logs
+COPY munin /etc/logrotate.d/
 
 # Expose volumes
 VOLUME /etc/munin/munin-conf.d /etc/munin/plugin-conf.d /var/lib/munin /var/log/munin
