@@ -23,7 +23,7 @@ sudo -u munin -- /usr/sbin/rrdcached \
 munin-node-configure --shell --suggest 2>/dev/null | bash
 
 # generate node list
-[[ ! -z "$NODES" ]] && for NODE in "$NODES"
+[[ ! -z "$NODES" ]] && for NODE in $NODES
 do
   NAME=`echo "$NODE" | cut -d ":" -f1`
   HOST=`echo "$NODE" | cut -d ":" -f2`
@@ -43,7 +43,7 @@ EOF
 done
 
 # generate smtp node list, and query smtp hosts for config
-[[ ! -z "$SNMP_NODES" ]] && for NODE in "$SNMP_NODES"
+[[ ! -z "$SNMP_NODES" ]] && for NODE in $SNMP_NODES
 do
   HOST=`echo "$NODE" | cut -d ":" -f1`
   COMMUNITY=`echo "$NODE" | cut -d ":" -f2`
