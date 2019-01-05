@@ -10,7 +10,7 @@ Inspired from build-failures [docker-munin-server](https://github.com/build-fail
 
 ## Tags
 
-* latest ([Dockerfile](https://github.com/aheimsbakk/munin-alpine/Dockerfile))
+* latest ([Dockerfile](https://github.com/aheimsbakk/munin/blob/master/Dockerfile))
 
 ## List of nodes to check
 
