@@ -58,3 +58,5 @@ docker run -d \
   --name munin-server \ 
   munin-alpine
 ```
+
+Access docker at `http://host/munin/`
