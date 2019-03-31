@@ -64,6 +64,9 @@ EOF
   fi
 done
 
+# Default plugins
+munin-node-configure --shell | bash
+
 # Remove plugins that doesn't work in docker
 rm /etc/munin/plugins/{cpuspeed,open_files,users,swap,proc_pri}
 
