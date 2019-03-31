@@ -64,7 +64,10 @@ EOF
   fi
 done
 
-# Start munin node on the docker 
+# Remove plugins that doesn't work in docker
+rm /etc/munin/plugins/{cpuspeed,open_files,users,swap,proc_pri}
+
+# Start munin node on the docker
 munin-node
 
 # Run once before we start fcgi
