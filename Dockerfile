@@ -1,11 +1,11 @@
-FROM alpine:3.8
+FROM alpine:latest
 
 # Thats me
 MAINTAINER Arnulf Heimsbakk <arnulf.heimsbakk@gmail.com>
 
 # Install packages
 RUN apk update; \
-    apk add dumb-init sudo logrotate munin rrdtool-cached \
+    apk add dumb-init sudo logrotate findutils procps coreutils munin rrdtool-cached \
             nginx spawn-fcgi perl-cgi-fast; \
     rm /var/cache/apk/*
 
