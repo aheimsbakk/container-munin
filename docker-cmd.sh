@@ -60,8 +60,8 @@ EOF
 env.community $COMMUNITY
 
 EOF
-    munin-node-configure --shell --snmp "$HOST" --snmpcommunity "$COMMUNITY" | bash
   fi
+  munin-node-configure --shell --snmp "$HOST" --snmpcommunity "$COMMUNITY" | bash
 done
 
 # Default plugins
