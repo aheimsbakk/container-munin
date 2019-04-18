@@ -45,16 +45,16 @@ done
 # generate smtp node list, and query smtp hosts for config
 [[ ! -z "$SNMP_NODES" ]] && for NODE in $SNMP_NODES
 do
-  HOST=`echo "$NODE" | cut -d ":" -f1`
+  GROUPHOST=`echo "$NODE" | cut -d ":" -f1`
+  HOST=`echo "$GROUPHOST" | cut -d ";" -f2`
   COMMUNITY=`echo "$NODE" | cut -d ":" -f2`
   if ! grep -q "$HOST" /etc/munin/munin-conf.d/smtp-nodes.conf 2>/dev/null ; then
     cat << EOF >> /etc/munin/munin-conf.d/smtp-nodes.conf
-[$HOST]
+[$GROUPHOST]
     address 127.0.0.1
     use_node_name no
 
 EOF
-    HOST=`echo "$HOST" | cut -d ";" -f2`
     cat << EOF >> /etc/munin/plugin-conf.d/snmp_communities
 [snmp_${HOST}_*]
 env.community $COMMUNITY
@@ -63,9 +63,6 @@ EOF
   fi
   munin-node-configure --shell --snmp "$HOST" --snmpcommunity "$COMMUNITY" | bash
 done
-
-# Default plugins
-munin-node-configure --shell | bash
 
 # Remove plugins that doesn't work in docker
 rm /etc/munin/plugins/{cpuspeed,open_files,users,swap,proc_pri}
