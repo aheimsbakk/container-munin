@@ -6,7 +6,7 @@ MAINTAINER Arnulf Heimsbakk <arnulf.heimsbakk@gmail.com>
 # Install packages
 RUN apk update; \
     apk add dumb-init sudo logrotate findutils procps coreutils munin rrdtool-cached \
-            nginx spawn-fcgi perl-cgi-fast; \
+            nginx spawn-fcgi perl-cgi-fast ttf-opensans; \
     rm /var/cache/apk/*
 
 # Set munin crontab
