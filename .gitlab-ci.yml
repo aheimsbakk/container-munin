@@ -4,7 +4,7 @@ image: docker:latest
 #  DOCKER_DRIVER: overlay2
 
 services:
-  - docker:dind
+  - docker:18.09-dind
 
 before_script:
   - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
