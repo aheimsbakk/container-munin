@@ -19,10 +19,10 @@ sudo -u munin -- /usr/sbin/rrdcached \
   -m 0660 -l unix:/run/munin/rrdcached.sock \
   -w 1800 -z 1800 -f 3600
 
-# Concifure munin node in the docker
+# Configure munin node in the docker
 munin-node-configure --shell --suggest 2>/dev/null | bash
 
-# generate node list
+# Generate node list
 [[ ! -z "$NODES" ]] && for NODE in $NODES
 do
   NAME=`echo "$NODE" | cut -d ":" -f1`
@@ -42,7 +42,7 @@ EOF
   fi
 done
 
-# generate smtp node list, and query smtp hosts for config
+# Generate smtp node list, and query smtp hosts for config
 [[ ! -z "$SNMP_NODES" ]] && for NODE in $SNMP_NODES
 do
   GROUPHOST=`echo "$NODE" | cut -d ":" -f1`
