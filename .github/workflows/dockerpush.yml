@@ -9,13 +9,16 @@ on:
     # Publish `v1.2.3` tags as releases.
     tags:
       - v*
-
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '01 02 * * *'
   # Run tests for any PRs.
+    
   pull_request:
 
 env:
   # TODO: Change variable to your image's name.
-  IMAGE_NAME: image
+  IMAGE_NAME: munin
 
 jobs:
   # Run tests.
@@ -48,7 +51,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build image
-        run: docker build . --file Dockerfile --tag munin
+        run: docker build . --file Dockerfile --tag image
 
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
