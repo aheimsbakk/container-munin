@@ -1,5 +1,7 @@
 # munin-alpine
 
+![Docker](https://github.com/aheimsbakk/munin/workflows/Docker/badge.svg?branch=master)
+
 Docker image for Munin server optimized for a large number of hosts in an effective manner.
 
 * `rrdcached` is used to be able to handle a large number of hosts
