@@ -1,6 +1,6 @@
 # munin-alpine
 
-![Docker](https://github.com/aheimsbakk/munin/workflows/Docker/badge.svg?branch=master)
+![Docker](https://github.com/aheimsbakk/munin/workflows/Docker/badge.svg?branch=master) ![Docker](https://github.com/aheimsbakk/munin/workflows/Docker/badge.svg?event=schedule)
 
 Docker image for Munin server optimized for a large number of hosts in an effective manner.
 
