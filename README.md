@@ -1,7 +1,5 @@
 # munin-alpine
 
-[![Docker](https://github.com/aheimsbakk/munin/workflows/Docker/badge.svg?branch=master) ![Docker](https://github.com/aheimsbakk/munin/workflows/Docker/badge.svg?event=schedule)](/aheimsbakk/munin/packages/125034)
-
 Docker image for Munin server optimized for a large number of hosts in an effective manner.
 
 * `rrdcached` is used to be able to handle a large number of hosts
@@ -10,7 +8,10 @@ Docker image for Munin server optimized for a large number of hosts in an effect
 
 Inspired from build-failures [docker-munin-server](https://github.com/build-failure/docker-munin-server).
 
-## Download
+## Status and download
+
+Last push to master: ![Docker](https://github.com/aheimsbakk/munin/workflows/Docker/badge.svg?branch=master)  
+Daily schedule on master: ![Docker](https://github.com/aheimsbakk/munin/workflows/Docker/badge.svg?branch=master&event=schedule)
 
 [Download](/aheimsbakk/munin/packages/125034)
 
