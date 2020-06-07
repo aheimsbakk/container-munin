@@ -4,10 +4,21 @@ FROM alpine:latest
 MAINTAINER Arnulf Heimsbakk <arnulf.heimsbakk@gmail.com>
 
 # Install packages
-RUN apk update; \
-    apk add dumb-init sudo logrotate findutils procps coreutils munin rrdtool-cached \
-            nginx spawn-fcgi perl-cgi-fast ttf-opensans; \
-    rm /var/cache/apk/*
+RUN apk add --no-cache \
+  coreutils \
+  dumb-init \
+  findutils \
+  logrotate \
+  munin \
+  nginx \
+  perl-cgi-fast \
+  procps \
+  rrdtool-cached \
+  spawn-fcgi \
+  sudo \
+  ttf-opensans \
+  tzdata \
+  ;
 
 # Set munin crontab
 RUN sed '/^[^*].*$/d; s/ munin //g' /etc/munin/munin.cron.sample | crontab -u munin - 
