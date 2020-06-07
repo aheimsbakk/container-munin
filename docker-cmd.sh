@@ -3,6 +3,15 @@
 NODES="${NODES:-}"
 SNMP_NODES="${SNMP_NODES:-}"
 
+# Set timezone
+if ! [[ ! -z "$TZ" && -f "/usr/share/zoneinfo/$TZ" ]]; then
+  TZ=UTC
+fi
+
+cp "/usr/share/zoneinfo/$TZ" /etc/localtime
+echo "$TZ" >  /etc/timezone
+
+
 # Fix ownership
 chown munin.munin \
   /var/log/munin /run/munin /var/lib/munin /var/lib/munin/cgi-tmp \
