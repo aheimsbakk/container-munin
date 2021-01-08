@@ -1,3 +1,5 @@
+# Use Kaniko to build on containers without root, ie on Kubernetes
+
 image:
   name: gcr.io/kaniko-project/executor:debug
   entrypoint: [""]
@@ -8,6 +10,18 @@ variables:
 before_script:
   - sed -i "s/VERSION/${VERSION}/g" Dockerfile
 
+# Check if we build successfully on all branches.
+
+test:
+  stage: test
+  script:
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --no-push
+  except:
+    - master
+
+# Build container and push to registry for master branch.
+
 build:
   stage: build
   script:
@@ -16,10 +30,3 @@ build:
   only:
     - master
 
-test:
-  stage: test
-  script:
-    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile
-  except:
-    - master
