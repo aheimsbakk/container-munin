@@ -1,7 +1,7 @@
 # Use Kaniko to build on containers without root, ie on Kubernetes
 
 image:
-  name: registry.heimsbakk.no:5487/docker/executor:debug
+  name: registry.heimsbakk.no:5487/docker/kaniko/executor:debug
   entrypoint: [""]
 
 variables:
