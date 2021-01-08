@@ -1,5 +1,4 @@
-#FROM registry.heimsbakk.no:5487/docker/alpine:latest
-FROM registry.heimsbakk.no:5487/docker/executor:latest
+FROM registry.heimsbakk.no:5487/docker/alpine:latest
 
 # Thats me
 MAINTAINER Arnulf Heimsbakk <arnulf.heimsbakk@gmail.com>
