@@ -8,13 +8,6 @@ Container image for Munin server optimized for a large number of hosts in an eff
 
 Inspired from build-failures [docker-munin-server](https://github.com/build-failure/docker-munin-server).
 
-## Status and download
-
-Last push to master: ![Docker](https://github.com/aheimsbakk/munin/workflows/Docker/badge.svg?branch=master)
-Daily schedule on master: ![Docker](https://github.com/aheimsbakk/munin/workflows/Docker/badge.svg?branch=master&event=schedule)
-
-[Download](/aheimsbakk/munin/packages/125034)
-
 ## Tags
 
 * latest ([Dockerfile](https://github.com/aheimsbakk/munin/blob/master/Dockerfile))
