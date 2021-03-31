@@ -56,7 +56,7 @@ done
 do
   GROUPHOST=`echo "$NODE" | cut -d ":" -f1`
   HOST=`echo "$GROUPHOST" | cut -d ";" -f2`
-  COMMUNITY=`echo "$NODE" | cut -d ":" -f2`
+  COMMUNITY=`echo "$NODE" | cut -d ":" -f3`
   if ! grep -q "$HOST" /etc/munin/munin-conf.d/snmp-nodes.conf 2>/dev/null ; then
     cat << EOF >> /etc/munin/munin-conf.d/snmp-nodes.conf
 [$GROUPHOST]
