@@ -1,0 +1,4 @@
+#!/bin/sh
+set -xe
+
+./build.sh "$DOCKERFILE_PATH" "$IMAGE_NAME"

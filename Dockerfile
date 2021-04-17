@@ -1,4 +1,4 @@
-FROM registry.heimsbakk.no:5487/docker/alpine:latest
+FROM docker.io/aheimsbakk/base-alpine:latest
 
 # Thats me
 MAINTAINER Arnulf Heimsbakk <arnulf.heimsbakk@gmail.com>
