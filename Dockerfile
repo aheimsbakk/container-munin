@@ -1,4 +1,4 @@
-FROM docker.io/aheimsbakk/base-alpine:latest
+FROM aheimsbakk/base-alpine:latest
 
 # Thats me
 MAINTAINER Arnulf Heimsbakk <arnulf.heimsbakk@gmail.com>

@@ -32,14 +32,15 @@ get_dockerfile() {
   arch="$1"; shift
   dockerfile="$1"
 
+  dockerfile_content="$(sed -E "s#^(FROM) (.*)#\1 --platform=linux/$arch docker.io/\2#g" "$dockerfile")"
+
   if [ "$arch" != "amd64" ]
   then
-    # FIXME when docker start supporting the --platform arg in a proper way uncomment this
-    sed -E "s#^(FROM) (.*)/#\1 --platform=linux/$arch \2/#g" "$dockerfile" |
+    echo "$dockerfile_content" |
       sed "/^FROM /a COPY --from=qemu /usr/bin/qemu-$(get_arch2arch "$arch")-static /usr/bin" |
       sed "0,/FROM /!b;//i $(get_multiarch_qemu_container "$arch")\n"
   else
-    cat "$dockerfile"
+    echo "$dockerfile_content"
   fi
 }
 
@@ -84,7 +85,6 @@ do
 
   dockerfile=$(get_dockerfile "$arch" "$DOCKERFILE_PATH")
 
-  cd "$(dirname "$DOCKERFILE_PATH")" || return
   if [ "$DOCKER_CMD" = "podman" ]
   then
     echo "$dockerfile" |
