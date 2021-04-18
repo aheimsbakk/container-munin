@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # remove / in archs
 get_short_arch() {
