@@ -73,7 +73,6 @@ else
   $DOCKER_CMD run --rm --privileged docker.io/multiarch/qemu-user-static --reset
 fi
 
-
 # build for all architectures
 for arch in $ARCHITECTURES
 do
@@ -88,7 +87,7 @@ do
   if [ "$DOCKER_CMD" = "podman" ]
   then
     echo "$dockerfile" |
-      $DOCKER_CMD build --pull --tag "$IMAGE_NAME-$(get_short_arch "$arch")" --platform="linux/$arch" --file - .
+      buildah bud --pull --tag "$IMAGE_NAME-$(get_short_arch "$arch")" --platform="linux/$arch" --file - .
   else
     echo "$dockerfile" |
       $DOCKER_CMD build --pull --tag "$IMAGE_NAME-$(get_short_arch "$arch")" --platform="linux/$arch" --file - .
