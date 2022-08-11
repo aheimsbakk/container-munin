@@ -26,9 +26,6 @@ RUN sed '/^[^*].*$/d; s/ munin //g' /etc/munin/munin.cron.sample | crontab -u mu
 # Log munin-node to stdout
 RUN sed -i 's#^log_file.*#log_file /dev/stdout#' /etc/munin/munin-node.conf
 
-# Add missing directory for nginx
-RUN mkdir /run/nginx
-
 # Default nginx.conf
 COPY nginx.conf /etc/nginx/
 
