@@ -13,7 +13,7 @@ echo "$TZ" >  /etc/timezone
 
 
 # Fix ownership
-chown munin.munin \
+chown munin:munin \
   /var/log/munin /run/munin /var/lib/munin /var/lib/munin/cgi-tmp \
   /etc/munin/munin-conf.d /etc/munin/plugin-conf.d
 
