@@ -45,10 +45,10 @@ COPY munin /etc/logrotate.d/
 VOLUME /etc/munin/munin-conf.d /etc/munin/plugin-conf.d /var/lib/munin /var/log/munin
 
 # Expose NODES variable
-ENV NODES
+ENV NODES ""
 
 # Expose SNMP_NODES variable
-ENV SNMP_NODES
+ENV SNMP_NODES ""
 
 # Expose variable to disable node
 ENV DISABLE_MUNIN_NODE false
