@@ -33,7 +33,7 @@ if [ "$DISABLE_MUNIN_NODE" != "true" ]; then
   # Configure munin node in the docker
   munin-node-configure --shell --suggest 2>/dev/null | bash
   
-  $NODES="Munin;localhost:127.0.0.1 $NODES"
+  NODES="Munin;localhost:127.0.0.1 $NODES"
   
 fi
 
