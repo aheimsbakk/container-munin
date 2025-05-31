@@ -49,6 +49,17 @@ jobs:
           containerfiles: |
             ./Dockerfile
 
+      - name: Push to Docker Hub when on main branch 
+        id: push-docker-hub
+        if: github.ref == 'refs/heads/master' || github.event_name == 'schedule'
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-container.outputs.image }}
+          tags: ${{ steps.build-container.outputs.tags }}
+          registry: ${{ secrets.DOCKER_REGISTRY }}
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASS }}
+
       - name: Push Container when on main branch
         id: push-container
         if: github.ref == 'refs/heads/master' || github.event_name == 'schedule'
@@ -60,16 +71,6 @@ jobs:
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_PASS }}
 
-      - name: Push to Docker Hub when on main branch 
-        id: push-docker-hub
-        if: github.ref == 'refs/heads/master' || github.event_name == 'schedule'
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.build-container.outputs.image }}
-          tags: ${{ steps.build-container.outputs.tags }}
-          registry: ${{ secrets.DOCKER_REGISTRY }}
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_PASS }}
 
       - name: Print container url when on main branch
         if: github.ref == 'refs/heads/master' || github.event_name == 'schedule'
