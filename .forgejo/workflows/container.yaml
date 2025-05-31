@@ -77,6 +77,7 @@ jobs:
         run: |
           for tag in ${{ steps.build-container.outputs.tags }}; do
             echo $tag
+            echo {{ steps.build-container.outputs.image }}:${tag}
             buildah manifest exists {{ steps.build-container.outputs.image }}:${tag}
           done
           echo 
