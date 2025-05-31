@@ -58,7 +58,7 @@ jobs:
         uses: redhat-actions/buildah-build@v2
         with:
           image: ${{ env.IMAGE_NAME }}
-          platform: linux/amd64
+          platform: linux/amd64,linux/arm64
           tags: main latest
           containerfiles: |
             ./Containerfile
@@ -77,8 +77,8 @@ jobs:
         run: |
           for tag in ${{ steps.build-container.outputs.tags }}; do
             echo $tag
-            echo {{ steps.build-container.outputs.image }}:${tag}
-            buildah manifest exists {{ steps.build-container.outputs.image }}:${tag}
+            echo ${{ steps.build-container.outputs.image }}:${tag}
+            buildah manifest exists ${{ steps.build-container.outputs.image }}:${tag}
           done
           echo 
           #buildah manifest push --all ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest docker://${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest
