@@ -18,8 +18,8 @@ jobs:
 
     env: 
       STORAGE_DRIVER: overlay
-      # BUILDAH_FORMAT: docker
-      #BUILDAH_ISOLATION: chroot
+      BUILDAH_FORMAT: docker
+      BUILDAH_ISOLATION: chroot
 
     steps:
       - name: Get container registry path
