@@ -58,7 +58,7 @@ jobs:
         uses: redhat-actions/buildah-build@v2
         with:
           image: ${{ env.IMAGE_NAME }}
-          plattform: linux/amd64
+          platform: linux/amd64
           tags: main latest
           containerfiles: |
             ./Containerfile
