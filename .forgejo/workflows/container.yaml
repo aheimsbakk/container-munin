@@ -56,7 +56,9 @@ jobs:
         run: |
           for tag in ${{ matrix.container.tag }}
           do
-            buildah tag localhost/image ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:tag
+            buildah tag \
+              localhost/image \
+              ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:${tag}
           done
           # buildah manifest rm localhost/image
 
@@ -70,7 +72,9 @@ jobs:
 
           for tag in ${{ steps.build-container.outputs.tags }}; do
             echo $tag
-            buildah manifest push --all localhost:image docker://${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:tag
+            buildah manifest push --all --log-level info \
+              localhost:image \
+              docker://${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:${tag}
           done
           echo 
 
