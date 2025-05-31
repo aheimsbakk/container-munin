@@ -44,7 +44,7 @@ jobs:
         uses: redhat-actions/buildah-build@v2
         with:
           image: ${{ env.IMAGE_NAME }}
-          tags: main latest
+          tags: latest
           containerfiles: |
             ./Containerfile
 
@@ -58,7 +58,7 @@ jobs:
         if: github.ref == 'refs/heads/master' || github.event_name == 'schedule'
         uses: redhat-actions/push-to-registry@v2
         with:
-          image: ${{ env.IMAGE_NAME }}
+          image: ${{ steps.build-container.outputs.image }}
           tags: ${{ steps.build-container.outputs.tags }}
           registry: ${{ env.REGISTRY_PATH }}
           username: ${{ secrets.REGISTRY_USER }}
