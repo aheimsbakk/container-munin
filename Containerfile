@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM vel.heimsbakk.no/containers/alpine-base:latest
 
 # Thats me
 LABEL org.opencontainers.image.authors="arnulf.heimsbakk@gmail.com"

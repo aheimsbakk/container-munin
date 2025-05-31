@@ -45,7 +45,12 @@ jobs:
         with:
           image: ${{ env.IMAGE_NAME }}
           containerfiles: |
-            ./Dockerfile
+            ./Containerfile
+
+      - run: |
+          echo ${{ steps.build-container.outputs.image }}
+          echo ${{ steps.build-container.outputs.tags }}
+          echo ${{ env.REGISTRY_PATH }}
 
       - name: Push Container when on main branch
         id: push-container
