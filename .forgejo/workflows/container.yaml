@@ -46,7 +46,7 @@ jobs:
           buildah images
           echo
           echo --- buildah build --platform=linux/amd64,linux/arm64 --manifest ${{ env.IMAGE_NAME }}
-          buildah build --platform=linux/amd64,linux/arm64 --manifest ${{ env.IMAGE_NAME }}
+          buildah build --platform=linux/amd64,linux/arm64/v8,linux/arm32/v7 --manifest ${{ env.IMAGE_NAME }}
           buildah images
           echo
           echo --- buildah tag localhost/${{ env.IMAGE_NAME }} ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest
