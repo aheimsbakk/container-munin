@@ -73,7 +73,7 @@ jobs:
           for tag in ${{ matrix.container.tags }}; do
             echo $tag
             buildah manifest push --all --log-level info \
-              localhost:image \
+              localhost/image \
               docker://${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:${tag}
           done
           echo 
