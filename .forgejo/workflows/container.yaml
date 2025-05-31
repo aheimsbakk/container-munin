@@ -45,7 +45,7 @@ jobs:
           echo "${{ secrets.REGISTRY_PASS }}" | buildah login -u "${{ secrets.REGISTRY_USER }}" --password-stdin ${{ env.REGISTRY_PATH }}
           buildah images
           echo
-          echo --- buildah build --platform=linux/amd64 --manifest ${{ env.IMAGE_NAME }}
+          echo --- buildah build --platform=linux/amd64,linux/arm64 --manifest ${{ env.IMAGE_NAME }}
           buildah build --platform=linux/amd64 --manifest ${{ env.IMAGE_NAME }}
           buildah images
           echo
