@@ -16,8 +16,8 @@ jobs:
     container:
       image: vel.heimsbakk.no/containers/runner-debian:latest
 
-    #env: 
-      #STORAGE_DRIVER: vfs
+    env: 
+      STORAGE_DRIVER: overlay
       # BUILDAH_FORMAT: docker
       #BUILDAH_ISOLATION: chroot
 
