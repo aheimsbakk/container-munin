@@ -19,7 +19,7 @@ jobs:
     env:
       STORAGE_DRIVER: vfs
       # BUILDAH_FORMAT: docker
-      BUILDAH_ISOLATION: chroot
+      #BUILDAH_ISOLATION: chroot
 
     steps:
       - name: Get container registry path
