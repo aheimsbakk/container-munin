@@ -75,6 +75,7 @@ jobs:
 
       - name: Registry push
         run: |
+          buildah images
           for tag in ${{ steps.build-container.outputs.tags }}; do
             echo $tag
             echo ${{ steps.build-container.outputs.image }}:${tag}
