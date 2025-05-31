@@ -60,8 +60,8 @@ jobs:
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_PASS }}
 
-      - name: Push to Docker when on main branch 
-        id: push-container
+      - name: Push to Docker Hub when on main branch 
+        id: push-docker-hub
         if: github.ref == 'refs/heads/main' || github.event_name == 'schedule'
         uses: redhat-actions/push-to-registry@v2
         with:
@@ -73,4 +73,6 @@ jobs:
 
       - name: Print container url when on main branch
         if: github.ref == 'refs/heads/main' || github.event_name == 'schedule'
-        run: echo "Image pushed to ${{ steps.push-container.outputs.registry-paths }}"
+        run: |
+          echo "Image pushed to ${{ steps.push-container.outputs.registry-paths }}"
+          echo "Image pushed to ${{ steps.push-docker-hub.outputs.registry-paths }}"
