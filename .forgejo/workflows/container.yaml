@@ -18,7 +18,7 @@ jobs:
 
     env:
       STORAGE_DRIVER: vfs
-      BUILDAH_FORMAT: docker
+      # BUILDAH_FORMAT: docker
       BUILDAH_ISOLATION: chroot
 
     steps:
