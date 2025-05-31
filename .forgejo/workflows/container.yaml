@@ -53,12 +53,12 @@ jobs:
           buildah tag localhost/${{ env.IMAGE_NAME }} ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest
           buildah images
           echo
-          # echo --- buildah manifest rm localhost/${{ env.IMAGE_NAME }}
-          # buildah manifest rm localhost/${{ env.IMAGE_NAME }}
-          # buildah images
+          echo --- buildah manifest rm localhost/${{ env.IMAGE_NAME }}
+          buildah manifest rm localhost/${{ env.IMAGE_NAME }}
+          buildah images
           echo
           echo --- buildah manifest push --all ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest
-          buildah manifest push --all localhost/${{ env.IMAGE_NAME }} ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest
+          buildah manifest push --all ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest docker://${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest
 
       # - name: Build container
       #   id: build-container
