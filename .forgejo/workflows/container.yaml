@@ -4,8 +4,8 @@ on:
     paths:
       - '**/*.yaml'
       - '**/*.yml'
-      - 'Dockerfile'
       - 'Containerfile'
+      - 'Dockerfile'
   workflow_dispatch:
   schedule:
   - cron: '0 23 * * *'
@@ -23,13 +23,13 @@ jobs:
 
     steps:
       - name: Get container registry path
-        run: |
-          REGISTRY_PATH=${{ env.GITHUB_SERVER_URL }}
+        run: | 
+          REGISTRY_PATH=${{ github.server_url }}
           REGISTRY_PATH=$(echo ${REGISTRY_PATH} | sed "s#https://##g")/${{ github.repository_owner }}
           echo REGISTRY_PATH=${REGISTRY_PATH} >> $GITHUB_ENV
 
       - name: Get repository name
-        run: |
+        run: | 
           IMAGE_NAME=${{ github.repository }}
           REPO_OWNER=${{ github.repository_owner }}
           IMAGE_NAME=$(echo ${IMAGE_NAME} | sed "s#${REPO_OWNER}/##g")
@@ -44,10 +44,8 @@ jobs:
         uses: redhat-actions/buildah-build@v2
         with:
           image: ${{ env.IMAGE_NAME }}
-          layers: true
-          tags: latest
           containerfiles: |
-            ./Dockerfile
+            ./Containerfile
 
       - name: Push Container when on main branch
         id: push-container
@@ -60,20 +58,6 @@ jobs:
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_PASS }}
 
-      # - name: Push to Docker Hub when on main branch 
-      #   id: push-docker-hub
-      #   if: github.ref == 'refs/heads/master' || github.event_name == 'schedule'
-      #   uses: redhat-actions/push-to-registry@v2
-      #   with:
-      #     image: ${{ steps.build-container.outputs.image }}
-      #     tags: ${{ steps.build-container.outputs.tags }}
-      #     registry: ${{ secrets.DOCKER_REGISTRY }}
-      #     username: ${{ secrets.DOCKER_USER }}
-      #     password: ${{ secrets.DOCKER_PASS }}
-
-
       - name: Print container url when on main branch
         if: github.ref == 'refs/heads/master' || github.event_name == 'schedule'
-        run: |
-          echo "Image pushed to ${{ steps.push-container.outputs.registry-paths }}"
-          echo "Image pushed to ${{ steps.push-docker-hub.outputs.registry-paths }}"
+        run: echo "Image pushed to ${{ steps.push-container.outputs.registry-paths }}"
