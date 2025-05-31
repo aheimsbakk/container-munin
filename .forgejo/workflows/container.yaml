@@ -44,7 +44,7 @@ jobs:
           buildah build \
             --build-arg "" \
             --platform linux/amd64 \
-            --manifest ${{ env.IMAGE_NAME }}
+            --manifest ${{ env.IMAGE_NAME }} \
             -f Containerfile
 
       - name: Buildah tag images
