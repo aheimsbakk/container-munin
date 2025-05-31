@@ -41,8 +41,7 @@ jobs:
 
       - name: Buildah build for all platforms
         run: |
-          buildah build \
-            --build-arg "" \
+          buildah build ${{ matrix.container.extra_arg }} \
             --platform linux/amd64 \
             --manifest ${{ env.IMAGE_NAME }} \
             -f Containerfile
