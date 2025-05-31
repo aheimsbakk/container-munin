@@ -39,26 +39,48 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      # - name: Buildah build for all platforms
+      #   run: |
+      #     buildah build --platform=linux/amd64 --manifest ${{ env.IMAGE_NAME }}
+
+      # - name: Buildah tag images
+      #   run: |
+      #     echo --- buildah tag localhost/${{ env.IMAGE_NAME }} ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest
+      #     buildah tag localhost/${{ env.IMAGE_NAME }} ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest
+
+      #     # echo --- buildah manifest rm localhost/${{ env.IMAGE_NAME }}
+      #     # buildah manifest rm localhost/${{ env.IMAGE_NAME }}
+      #     # buildah images
+
 
       - name: Build container
+        id: build-container
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: ${{ env.IMAGE_NAME }}
+          plattform: linux/amd64
+          tags: main latest
+          containerfiles: |
+            ./Containerfile
+
+      - run: |
+          echo ${{ steps.build-container.outputs.image }}
+          echo ${{ steps.build-container.outputs.tags }}
+          echo ${{ env.REGISTRY_PATH }}
+
+
+      - name: Registry login
         run: |
           echo "${{ secrets.REGISTRY_PASS }}" | buildah login -u "${{ secrets.REGISTRY_USER }}" --password-stdin ${{ env.REGISTRY_PATH }}
-          buildah images
-          echo
-          echo --- buildah build --platform=linux/amd64,linux/arm64 --manifest ${{ env.IMAGE_NAME }}
-          buildah build --platform=linux/amd64,linux/arm64/v8,linux/arm32/v7 --manifest ${{ env.IMAGE_NAME }}
-          buildah images
-          echo
-          echo --- buildah tag localhost/${{ env.IMAGE_NAME }} ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest
-          buildah tag localhost/${{ env.IMAGE_NAME }} ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest
-          buildah images
-          echo
-          echo --- buildah manifest rm localhost/${{ env.IMAGE_NAME }}
-          buildah manifest rm localhost/${{ env.IMAGE_NAME }}
-          buildah images
-          echo
-          echo --- buildah manifest push --all ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest
-          buildah manifest push --all ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest docker://${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest
+
+      - name: Registry push
+        run: |
+          for tag in ${{ steps.build-container.outputs.tags }}; do
+            echo $tag
+            buildah manifest exists {{ steps.build-container.outputs.image }}:${tag}
+          done
+          echo 
+          #buildah manifest push --all ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest docker://${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest
 
       # - name: Build container
       #   id: build-container
