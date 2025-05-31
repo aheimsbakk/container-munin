@@ -70,7 +70,7 @@ jobs:
         run: |
           buildah images
 
-          for tag in ${{ steps.build-container.outputs.tags }}; do
+          for tag in ${{ matrix.container.tag }}; do
             echo $tag
             buildah manifest push --all --log-level info \
               localhost:image \
