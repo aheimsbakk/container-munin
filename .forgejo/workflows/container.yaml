@@ -45,7 +45,7 @@ jobs:
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: latest
-          archs: amd64, arm64
+          archs: amd64
           containerfiles: |
             ./Dockerfile
 
