@@ -1,7 +1,7 @@
-FROM aheimsbakk/base-alpine:latest
+FROM vel.heimsbakk.no/containers/alpine-base:latest
 
 # Thats me
-MAINTAINER Arnulf Heimsbakk <arnulf.heimsbakk@gmail.com>
+LABEL org.opencontainers.image.authors="arnulf.heimsbakk@gmail.com"
 
 # Install packages
 RUN apk add --no-cache \
@@ -10,6 +10,7 @@ RUN apk add --no-cache \
   findutils \
   logrotate \
   munin \
+  munin-node \
   nginx \
   perl-cgi-fast \
   procps \
