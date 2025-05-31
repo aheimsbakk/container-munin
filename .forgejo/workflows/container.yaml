@@ -45,7 +45,7 @@ jobs:
         with:
           image: ${{ env.IMAGE_NAME }}
           containerfiles: |
-            ./Containerfile
+            ./Dockerfile
 
       - name: Push Container when on main branch
         id: push-container
