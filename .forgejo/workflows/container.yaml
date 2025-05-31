@@ -39,31 +39,48 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+
       - name: Build container
-        id: build-container
-        uses: redhat-actions/buildah-build@v2
-        with:
-          image: ${{ env.IMAGE_NAME }}
-          tags: latest
-          containerfiles: |
-            ./Containerfile
+        run: |
+          echo "${{ secrets.REGISTRY_PASS }}" | buildah login -u "${{ secrets.REGISTRY_USER }}" --password-stdin ${{ env.REGISTRY_PATH }}
+          buildah images
+          echo
+          buildah build --platform=linux/amd64 --manifest ${{ env.IMAGE_NAME }}
+          buildah images
+          echo
+          buildah tag localhost/${{ env.IMAGE_NAME }} ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest
+          buildah images
+          echo
+          buildah manifest rm localhost/${{ env.IMAGE_NAME }}
+          buildah images
+          echo
+          buildah manifest push --all ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest
 
-      - run: |
-          echo ${{ steps.build-container.outputs.image }}
-          echo ${{ steps.build-container.outputs.tags }}
-          echo ${{ env.REGISTRY_PATH }}
+      # - name: Build container
+      #   id: build-container
+      #   uses: redhat-actions/buildah-build@v2
+      #   with:
+      #     image: ${{ env.IMAGE_NAME }}
+      #     tags: latest
+      #     containerfiles: |
+      #       ./Containerfile
 
-      - name: Push Container when on main branch
-        id: push-container
-        if: github.ref == 'refs/heads/master' || github.event_name == 'schedule'
-        uses: redhat-actions/push-to-registry@v2
-        with:
-          image: ${{ steps.build-container.outputs.image }}
-          tags: ${{ steps.build-container.outputs.tags }}
-          registry: ${{ env.REGISTRY_PATH }}
-          username: ${{ secrets.REGISTRY_USER }}
-          password: ${{ secrets.REGISTRY_PASS }}
+      # - run: |
+      #     echo ${{ steps.build-container.outputs.image }}
+      #     echo ${{ steps.build-container.outputs.tags }}
+      #     echo ${{ env.REGISTRY_PATH }}
 
-      - name: Print container url when on main branch
-        if: github.ref == 'refs/heads/master' || github.event_name == 'schedule'
-        run: echo "Image pushed to ${{ steps.push-container.outputs.registry-paths }}"
+      # - name: Push Container when on main branch
+      #   id: push-container
+      #   if: github.ref == 'refs/heads/master' || github.event_name == 'schedule'
+      #   uses: redhat-actions/push-to-registry@v2
+      #   with:
+      #     image: ${{ steps.build-container.outputs.image }}
+      #     tags: ${{ steps.build-container.outputs.tags }}
+      #     registry: ${{ env.REGISTRY_PATH }}
+      #     username: ${{ secrets.REGISTRY_USER }}
+      #     password: ${{ secrets.REGISTRY_PASS }}
+
+      # - name: Print container url when on main branch
+      #   if: github.ref == 'refs/heads/master' || github.event_name == 'schedule'
+      #   run: echo "Image pushed to ${{ steps.push-container.outputs.registry-paths }}"
