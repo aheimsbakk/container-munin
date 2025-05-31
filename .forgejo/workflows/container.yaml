@@ -15,7 +15,13 @@ jobs:
     runs-on: docker
     container:
       image: vel.heimsbakk.no/containers/runner-debian:latest
-
+    strategy:
+      matrix:
+        container:
+          - extra_args: ""
+            tags: main latest
+            platform: linux/arm64
+            containerfile: Containerfile
     env: 
       STORAGE_DRIVER: overlay
       BUILDAH_FORMAT: docker
@@ -41,26 +47,18 @@ jobs:
 
       - name: Buildah build for all platforms
         run: |
-          buildah build ${{ matrix.container.extra_arg }} \
-            --platform linux/amd64 \
-            --manifest ${{ env.IMAGE_NAME }} \
-            -f Containerfile
+          buildah build ${{ matrix.container.extra_args }} \
+            --platform ${{ matrix.container.platform }} \
+            --manifest image \
+            -f ${{ matrix.container.containerfile }}
 
       - name: Buildah tag images
         run: |
-          # echo --- buildah tag localhost/${{ env.IMAGE_NAME }} ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest
-          # buildah tag localhost/${{ env.IMAGE_NAME }} ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest
-
-          # echo --- buildah manifest rm localhost/${{ env.IMAGE_NAME }}
-          # buildah manifest rm localhost/${{ env.IMAGE_NAME }}
-          # buildah images
-
-
-      - run: |
-          echo ${{ steps.build-container.outputs.image }}
-          echo ${{ steps.build-container.outputs.tags }}
-          echo ${{ env.REGISTRY_PATH }}
-
+          for tag in ${{ matrix.container.tag }}
+          do
+            buildah tag localhost/image ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:tag
+          done
+          # buildah manifest rm localhost/image
 
       - name: Registry login
         run: |
@@ -69,13 +67,12 @@ jobs:
       - name: Registry push
         run: |
           buildah images
+
           for tag in ${{ steps.build-container.outputs.tags }}; do
             echo $tag
-            echo ${{ steps.build-container.outputs.image }}:${tag}
-            buildah manifest exists ${{ steps.build-container.outputs.image }}:${tag}
+            buildah manifest push --all localhost:image docker://${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:tag
           done
           echo 
-          #buildah manifest push --all ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest docker://${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }}:latest
 
       # - name: Build container
       #   id: build-container
