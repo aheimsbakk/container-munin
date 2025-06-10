@@ -1,4 +1,7 @@
-FROM vel.heimsbakk.no/containers/alpine-base:edge
+ARG BASE=vel.heimsbakk.no/containers/alpine-base
+ARG RELEASE=latest
+
+FROM ${BASE}:${RELEASE}
 
 # Thats me
 LABEL org.opencontainers.image.authors="arnulf.heimsbakk@gmail.com"
