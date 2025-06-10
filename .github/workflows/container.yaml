@@ -71,5 +71,5 @@ jobs:
         with:
           package-type: container
           package-name: munin
-          min-versions-to-keep: 10
+          min-versions-to-keep: 4
           delete-only-untagged-versions: true
