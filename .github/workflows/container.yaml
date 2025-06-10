@@ -70,6 +70,6 @@ jobs:
         uses: actions/delete-package-versions@v5
         with:
           package-type: container
-          package-name: alpine
+          package-name: munin
           min-versions-to-keep: 10
           delete-only-untagged-versions: true
