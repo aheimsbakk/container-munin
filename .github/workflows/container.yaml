@@ -68,14 +68,15 @@ jobs:
 
   build-container:
     runs-on: "${{ vars.RUNS_ON }}"
-    name: ${{ matrix.container.build-args }}
+    name: ${{ matrix.container.name }}
     needs: set-vars
     permissions:
       packages: write
     strategy:
       matrix:
         container:
-          - build-args: |
+          - name: munin
+            build-args: |
               RELEASE=latest
               BASE=${{ needs.set-vars.outputs.registry-name }}/${{ github.repository_owner }}/alpine-base
 
