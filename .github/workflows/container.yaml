@@ -1,14 +1,3 @@
----
-on:
-  push:
-    paths:
-      - '.github/**/*.yaml'
-      - '.github/**/*.yml'
-      - 'Containerfile'
-      - 'Dockerfile'
-  workflow_dispatch:
-  schedule:
-  - cron: '0 23 * * *'
 
 jobs:
   build-container:
@@ -33,19 +22,85 @@ jobs:
             platforms: linux/amd64,linux/arm64
             containerfile: Containerfile
 
-    env:
-      STORAGE_DRIVER: vfs
-      BUILDAH_FORMAT: docker
-      BUILDAH_ISOLATION: chroot
+
+
+---
+on:
+  push:
+    paths:
+      - '.github/**/*.yaml'
+      - '.github/**/*.yml'
+      - 'Containerfile'
+      - 'Dockerfile'
+  workflow_dispatch:
+  schedule:
+  - cron: '0 23 * * *'
+
+env:
+  CONTAINER_KEEP_COUNT: 10
+
+jobs:
+  set-vars:
+    runs-on: ${{ vars.RUNS_ON }}
+    outputs:
+      container-name: ${{ steps.set_output.outputs.container-name }}
+      registry-name: ${{ steps.set_output.outputs.registry-name }}
+    steps:
+      - name: Set output variable
+        id: set_output
+        run: |
+          REGISTRY_NAME="${{ github.server_url }}"
+          REGISTRY_NAME=$(echo ${REGISTRY_NAME} | sed "s#https://##g")
+          if [[ "${REGISTRY_NAME}" == "github.com" ]]
+          then
+            REGISTRY_NAME="ghcr.io"
+          fi
+          echo "registry-name=${REGISTRY_NAME}" >> "$GITHUB_OUTPUT"
+          echo "Set registry-name to: ${REGISTRY_NAME}"
+          CONTAINER_NAME=${{ github.repository }}
+          REPO_OWNER=${{ github.repository_owner }}
+          CONTAINER_NAME=$(echo ${CONTAINER_NAME} | sed "s#${REPO_OWNER}/##g")
+          CONTAINER_NAME=$(echo ${CONTAINER_NAME} | sed "s#container-##g")
+          echo "container-name=${CONTAINER_NAME}" >> "$GITHUB_OUTPUT"
+          echo "Set container-name to: ${CONTAINER_NAME}"
+          echo  "Runs on: ${{ vars.RUNS_ON }}"
+          sleep 5
+
+  build-container:
+    runs-on: "${{ vars.RUNS_ON }}"
+    name: ${{ matrix.container.build-args }}
+    needs: set-vars
+    permissions:
+      packages: write
+    strategy:
+      matrix:
+        container:
+          - build-args: |
+              RELEASE=latest
+              BASE=${{ needs.set-vars.outputs.registry-name }}/${{ github.repository_owner }}/alpine-base
+
+            tags: |
+              ${{ needs.set-vars.outputs.registry-name }}/${{ github.repository_owner }}/${{ needs.set-vars.outputs.container-name }}:latest
+            platforms: linux/amd64,linux/arm64
+            containerfile: Containerfile
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Login to Docker Hub
+      - name: Login to non Github registry
+        if: ${{ ! contains(github.api_url, 'github' ) }}
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
+          registry: ${{ needs.set-vars.outputs.registry-name }}
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.REGISTRY_PASS }}
+
+      - name: Login to Github registry
+        if: ${{ contains(github.api_url, 'github' ) }}
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ needs.set-vars.outputs.registry-name }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -66,10 +121,10 @@ jobs:
           build-args: ${{ matrix.container.build-args }}
 
       - name: Clean up old versions
-        if: github.ref == 'refs/heads/master' || github.event_name == 'schedule' 
+        if: ${{ contains(github.api_url, 'github') && ( github.ref == 'refs/heads/master' || github.event_name == 'schedule' ) }} 
         uses: actions/delete-package-versions@v5
         with:
           package-type: container
-          package-name: munin
-          min-versions-to-keep: 4
+          package-name: ${{ needs.set-vars.outputs.container-name }}
+          min-versions-to-keep: ${{ env.CONTAINER_KEEP_COUNT }}
           delete-only-untagged-versions: true
