@@ -37,8 +37,8 @@ jobs:
           CONTAINER_NAME=$(echo ${CONTAINER_NAME} | sed "s#container-##g")
           echo "container-name=${CONTAINER_NAME}" >> "$GITHUB_OUTPUT"
           echo "Set container-name to: ${CONTAINER_NAME}"
-          echo  "Runs on: ${{ vars.RUNS_ON }}"
-          sleep 5
+          echo "Runs on: ${{ vars.RUNS_ON }}"
+          echo "Push container: ${{ github.ref == 'refs/heads/master' || github.event_name == 'schedule' }}"
 
   build-container:
     runs-on: "${{ vars.RUNS_ON }}"

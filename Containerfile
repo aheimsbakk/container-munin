@@ -1,4 +1,4 @@
-ARG BASE=docker.io/alpine
+ARG BASE=vel.heimsbakk.no/containers/alpine-base
 ARG RELEASE=latest
 
 FROM ${BASE}:${RELEASE}
