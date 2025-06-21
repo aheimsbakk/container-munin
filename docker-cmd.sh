@@ -11,11 +11,11 @@ fi
 cp "/usr/share/zoneinfo/$TZ" /etc/localtime
 echo "$TZ" >  /etc/timezone
 
-
 # Fix ownership
 chown munin:munin \
   /var/log/munin /run/munin /var/lib/munin /var/lib/munin/cgi-tmp \
-  /etc/munin/munin-conf.d /etc/munin/plugin-conf.d
+  /etc/munin/munin-conf.d /etc/munin/plugin-conf.d \
+  /usr/share/webapps/munin/html
 
 # Prepare for rrdcached
 sudo -u munin -- mkdir -p /var/lib/munin/rrdcached-journal
